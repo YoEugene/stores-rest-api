@@ -15,10 +15,6 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = 'eugene'
 api = Api(app)
 
-@app.before_first_request
-def create_tables():
-    db.create_all()
-
 # change jwt authentication url, have to before jwt = JWT(...)
 # app.config['JWT_AUTH_URL_RULE'] = '/login'
 jwt = JWT(app, authenticate, identity_function) # create an endpoint: /auth
