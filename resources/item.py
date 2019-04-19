@@ -42,9 +42,7 @@ class Item(Resource):
         return item.json(), 201
 
     # DELETE
-    # @jwt_required()
     def delete(self, name):
-        # use global items variable rather than local items variable
         item = ItemModel.find_by_name(name)
         if item:
 
@@ -55,8 +53,6 @@ class Item(Resource):
 
     # UPDATE
     def put(self, name):
-
-        # only accept 'float typed price' as valid arguments
         data = Item.parser.parse_args()
 
         item = ItemModel.find_by_name(name)
@@ -77,7 +73,4 @@ class Item(Resource):
 
 class ItemList(Resource):
     def get(self):
-        ## list comprehension
-        # return {'items': [item.json() for item in ItemModel.query.all()]} # .all() returns all items of the table as "object"
-        ## lambda method (filter, map, reduce)
         return {'items': list(map(lambda x: x.json(), ItemModel.query.all()))} # .all() returns all items of the table as "object"

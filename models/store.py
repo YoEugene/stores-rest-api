@@ -1,10 +1,8 @@
 from db import db
 
 class StoreModel(db.Model):
-    # tell sqlalchemy the table name
     __tablename__ = 'stores'
 
-    # tell sqlalchemy the column names, same as attributes in __init__
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80)) # limit the size of username to 80
 

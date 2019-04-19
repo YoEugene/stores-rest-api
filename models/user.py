@@ -2,10 +2,8 @@ import sqlite3
 from db import db
 
 class UserModel(db.Model):
-    # tell sqlalchemy the table name
     __tablename__ = 'users'
 
-    # tell sqlalchemy the column names, same as attributes in __init__
     id = db.Column(db.Integer, primary_key=True) # unique
     username = db.Column(db.String(80)) # limit the size of username to 80
     password = db.Column(db.String(40)) # limit the size of username to 40

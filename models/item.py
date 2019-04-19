@@ -1,10 +1,8 @@
 from db import db
 
 class ItemModel(db.Model):
-    # tell sqlalchemy the table name
     __tablename__ = 'items'
 
-    # tell sqlalchemy the column names, same as attributes in __init__
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80)) # limit the size of username to 80
     price = db.Column(db.Float(precision=2)) # limit the size of username to 40
