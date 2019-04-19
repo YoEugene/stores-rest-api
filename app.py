@@ -1,3 +1,5 @@
+import os
+
 from flask import Flask, jsonify
 from flask_restful import Api
 from flask_jwt import JWT
@@ -10,7 +12,7 @@ from resources.store import Store, StoreList
 from datetime import timedelta
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data.db' # can change to MySQL, PostgreSQL etc
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///data.db') # can change to MySQL, PostgreSQL etc
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = 'eugene'
 api = Api(app)
