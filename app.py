@@ -5,20 +5,28 @@ from flask_restful import Api
 from flask_jwt import JWT
 
 from security import authenticate, identity as identity_function
-from resources.user import UserRegister
+from resources.user import UserRegister, User
 from resources.item import Item, ItemList
 from resources.store import Store, StoreList
 
 from datetime import timedelta
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///data.db') # can change to MySQL, PostgreSQL etc
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get(
+    'DATABASE_URL', 'sqlite:///data.db')  # can change to MySQL, PostgreSQL etc
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['PROPAGATE_EXCEPTIONS'] = True
 app.secret_key = 'eugene'
 api = Api(app)
 
-jwt = JWT(app, authenticate, identity_function) # create an endpoint: /auth
+
+@app.before_first_request
+def create_tables():
+    db.create_all()
+
+
+jwt = JWT(app, authenticate, identity_function)  # create an endpoint: /auth
+
 
 @jwt.auth_response_handler
 def customized_response_handler(access_token, identity):
@@ -26,21 +34,26 @@ def customized_response_handler(access_token, identity):
         'access_token': access_token.decode('utf-8'),
         'user_id': identity.id
     })
-@jwt.jwt_error_handler
-def customized_error_handler(error):
-    return jsonify({
-        'message': error.description,
-        'code': error.status_code
-    }), error.status_code
+
+
+# @jwt.jwt_error_handler
+# def customized_error_handler(error):
+#     return jsonify({
+#         'message': error.description,
+#         'code': error.status_code
+#     }), error.status_code
+
 
 app.config['JWT_EXPIRATION_DELTA'] = timedelta(seconds=1800)
 app.config['JWT_AUTH_USERNAME_KEY'] = 'email'
 
 api.add_resource(Item, '/item/<string:name>')  # http://127.0.0.1/item/macbook
-api.add_resource(Store, '/store/<string:name>')  # http://127.0.0.1/item/macbook
+# http://127.0.0.1/item/macbook
+api.add_resource(Store, '/store/<string:name>')
 api.add_resource(ItemList, '/items')  # http://127.0.0.1/items
 api.add_resource(StoreList, '/stores')  # http://127.0.0.1/items
 api.add_resource(UserRegister, '/register')
+api.add_resource(User, '/user/<int:user_id>')
 
 if __name__ == '__main__':
     from db import db
