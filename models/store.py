@@ -12,11 +12,19 @@ class StoreModel(db.Model):
         self.name = name
 
     def json(self):
-        return {'name': self.name, 'items': [item.json() for item in self.items.all()]}
+        return {
+            'id': self.id,
+            'name': self.name,
+            'items': [item.json() for item in self.items.all()]
+        }
 
     @classmethod
     def find_by_name(cls, name):
         return cls.query.filter_by(name=name).first() # same as: SELECT * FROM items WHRER name=:name LIMIT 1
+
+    @classmethod
+    def find_all(cls):
+        return cls.query.all()
 
     def save_to_db(self): # include update and insert --> upserting!
         db.session.add(self) # the collection of objects that we're going to write into db

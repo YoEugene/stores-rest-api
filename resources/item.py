@@ -73,4 +73,4 @@ class Item(Resource):
 
 class ItemList(Resource):
     def get(self):
-        return {'items': list(map(lambda x: x.json(), ItemModel.query.all()))} # .all() returns all items of the table as "object"
+        return {'items': list(map(lambda item: item.json(), ItemModel.find_all()))} # .all() returns all items of the table as "object"
